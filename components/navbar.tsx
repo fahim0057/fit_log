@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+
 import { useFitLog } from "@/../context/fit-log-context";
 import DumbbellLogo from "@/../assets/logo.png";
 
@@ -19,7 +20,7 @@ function Logo() {
         priority
       />
 
-      <span className="display-title text-lg tracking-wide">
+      <span className="font-oswald text-[18px] font-black leading-7 tracking-wide text-white">
         FITLOG
       </span>
     </div>
@@ -41,9 +42,9 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#070807]/95 backdrop-blur">
-      <nav className="site-shell">
+      <nav className="site-shell px-6">
 
-        {/* Desktop Navbar */}
+        {/* ================= DESKTOP ================= */}
         <div className="hidden h-20 items-center justify-between md:flex">
 
           {/* Logo */}
@@ -51,74 +52,84 @@ export default function Navbar() {
             <Logo />
           </Link>
 
-          {/* Navigation Links */}
+          {/* Navigation */}
           <div className="flex items-center gap-2">
 
+            {/* Workouts */}
             <Link
               href="/#library"
-              className={
-                workoutActive
-                  ? "nav-link nav-link-active"
-                  : "nav-link"
-              }
+              className={`
+                flex h-7 w-[88px] items-center justify-center
+                text-sm font-medium
+                transition-all duration-200
+                ${
+                  workoutActive
+                    ? "rounded-full bg-[#16220d] text-[#C2F800]"
+                    : "text-[#C2F800] hover:text-white"
+                }
+              `}
             >
-              Workout
+              Workouts
             </Link>
 
+            {/* My Plan */}
             <Link
               href="/my-plan"
-              className={
-                planActive
-                  ? "nav-link nav-link-active"
-                  : "nav-link"
-              }
+              className={`
+                flex h-7 w-[88px] items-center justify-center
+                text-sm font-medium
+                transition-all duration-200
+                ${
+                  planActive
+                    ? "rounded-full bg-[#16220d] text-[#C2F800]"
+                    : "text-[#9CA3AF] hover:text-white"
+                }
+              `}
             >
               My Plan
             </Link>
-
           </div>
 
           {/* Counters */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-6">
 
+            {/* PLAN */}
             <Link
               href="/my-plan"
-              className="status-pill status-pill-filled"
+              className="flex items-center gap-2 text-sm text-[#9CA3AF]"
             >
-              <span>PLAN</span>
-              <strong>{plan.length}</strong>
+              <span>Plan</span>
+
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#C2F800] text-[11px] font-bold leading-none text-black">
+                {plan.length}
+              </span>
             </Link>
 
+            {/* SAVED */}
             <Link
               href="/my-plan"
-              className="status-pill status-pill-outline"
+              className="flex items-center gap-2 text-sm text-[#9CA3AF]"
             >
-              <span>SAVED</span>
-              <strong>{saved.length}</strong>
-            </Link>
+              <span>Saved</span>
 
+              <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[#9CA3AF] text-[11px] font-bold leading-none text-[#9CA3AF]">
+                {saved.length}
+              </span>
+            </Link>
           </div>
         </div>
 
-        {/* Mobile Navbar */}
+        {/* ================= MOBILE ================= */}
         <div className="flex h-20 items-center justify-between md:hidden">
 
           {/* Hamburger */}
           <button
             type="button"
-            aria-label={
-              menuOpen ? "Close menu" : "Open menu"
-            }
-            onClick={() =>
-              setMenuOpen((open) => !open)
-            }
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((open) => !open)}
             className="grid h-10 w-10 place-items-center border border-white/15"
           >
-            {menuOpen ? (
-              <X size={18} />
-            ) : (
-              <Menu size={18} />
-            )}
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
 
           {/* Logo */}
@@ -126,52 +137,63 @@ export default function Navbar() {
             <Logo />
           </Link>
 
-          {/* Counters */}
+          {/* Mobile counters */}
           <div className="flex items-center gap-2">
 
             <Link
               href="/my-plan"
-              className="status-pill status-pill-filled px-2"
+              className="flex items-center gap-1 text-xs text-[#9CA3AF]"
             >
-              <span>PLAN</span>
-              <strong>{plan.length}</strong>
+              <span>Plan</span>
+
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#C2F800] text-[10px] font-bold text-black">
+                {plan.length}
+              </span>
             </Link>
 
             <Link
               href="/my-plan"
-              className="status-pill status-pill-outline px-2"
+              className="flex items-center gap-1 text-xs text-[#9CA3AF]"
             >
-              <span>SAVED</span>
-              <strong>{saved.length}</strong>
-            </Link>
+              <span>Saved</span>
 
+              <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[#9CA3AF] text-[10px] font-bold text-[#9CA3AF]">
+                {saved.length}
+              </span>
+            </Link>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* ================= MOBILE MENU ================= */}
         {menuOpen && (
           <div className="border-t border-white/10 py-4 md:hidden">
 
             <Link
               href="/#library"
               onClick={closeMenu}
-              className={
-                workoutActive
-                  ? "nav-link nav-link-active block"
-                  : "nav-link block"
-              }
+              className={`
+                block px-4 py-3 text-sm font-medium
+                ${
+                  workoutActive
+                    ? "text-[#C2F800]"
+                    : "text-[#9CA3AF]"
+                }
+              `}
             >
-              Workout
+              Workouts
             </Link>
 
             <Link
               href="/my-plan"
               onClick={closeMenu}
-              className={
-                planActive
-                  ? "nav-link nav-link-active block"
-                  : "nav-link block"
-              }
+              className={`
+                block px-4 py-3 text-sm font-medium
+                ${
+                  planActive
+                    ? "text-[#C2F800]"
+                    : "text-[#9CA3AF]"
+                }
+              `}
             >
               My Plan
             </Link>

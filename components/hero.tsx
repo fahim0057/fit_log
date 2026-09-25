@@ -23,7 +23,7 @@ export default function Hero() {
 
         <div className="relative min-h-[320px] border-t border-white/10 lg:min-h-[500px] lg:border-l lg:border-t-0">
           <Image
-            src="/hero.jpg"
+            src="/assets/banner.png"
             alt="Athlete training in a gym"
             fill
             priority
