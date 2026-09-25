@@ -8,13 +8,13 @@ export function SectionTitle({
   subtitle?: string;
 }) {
   return (
-    <div className="mb-5">
-      <h2 className="font-oswald text-3xl font-bold uppercase leading-none tracking-tight text-white sm:text-4xl">
+    <div>
+      <h2 className="font-oswald text-[30px] font-bold uppercase leading-none tracking-tight text-white sm:text-[32px]">
         {title}
       </h2>
 
       {subtitle && (
-        <p className="mt-1.5 text-xs text-[#7F857D] sm:text-sm">
+        <p className="mt-2 text-[13px] text-[#7F857D]">
           {subtitle}
         </p>
       )}
@@ -33,8 +33,8 @@ export function Pill({
     <span
       className={
         tone === "accent"
-          ? "rounded-full bg-[#C2F800] px-2 py-0.5 text-[8px] font-bold uppercase leading-none tracking-wide text-black"
-          : "rounded-full border border-white/10 px-2 py-0.5 text-[8px] uppercase leading-none text-[#7F857D]"
+          ? "inline-flex h-5 items-center rounded-full bg-[#C2F800] px-3 text-[11px] font-bold uppercase leading-none tracking-wide text-black"
+          : "inline-flex h-5 items-center rounded-full border border-white/10 px-3 text-[11px] uppercase leading-none text-[#7F857D]"
       }
     >
       {children}

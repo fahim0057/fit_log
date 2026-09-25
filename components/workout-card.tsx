@@ -1,10 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Clock3,
-  Flame,
-  Star,
-} from "lucide-react";
+import { Clock3, Flame, Star } from "lucide-react";
 
 import type { Workout } from "@/../lib/types";
 import { Pill } from "@/../components/ui";
@@ -17,59 +13,94 @@ export default function WorkoutCard({
   return (
     <Link
       href={`/workout/${workout.id}`}
-      className="group block overflow-hidden border border-white/10 bg-[#0B0D0B] transition duration-200 hover:border-[#C2F800]/40"
+      className="
+        group
+        block
+        h-[368px]
+        w-full
+        max-w-[394px]
+        overflow-hidden
+        rounded-xl
+        border
+        border-[#24272E]
+        bg-[#15171D]
+        transition-all
+        duration-200
+        hover:border-[#C2F800]/40
+      "
     >
-      {/* ================= IMAGE ================= */}
-      <div className="relative aspect-[16/8] overflow-hidden bg-[#080908]">
+      {/* Image */}
+      <div className="relative h-[197px] w-full overflow-hidden bg-[#0B0D0B]">
         <Image
           src={workout.image}
           alt={workout.name}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition duration-300 group-hover:scale-[1.03]"
+          sizes="394px"
+          className="
+            object-cover
+            transition-transform
+            duration-300
+            group-hover:scale-[1.02]
+          "
         />
       </div>
 
-      {/* ================= CONTENT ================= */}
-      <div className="p-4 sm:p-5">
+      {/* Content */}
+      <div className="px-6 py-5">
+
         {/* Tags */}
-        <div className="flex flex-wrap gap-2">
-          {workout.muscleGroups.slice(0, 2).map((group) => (
-            <Pill
-              key={group}
-              tone="accent"
-            >
-              {group}
-            </Pill>
-          ))}
+        <div className="flex min-h-[20px] flex-wrap gap-2">
+          {workout.muscleGroups
+            .slice(0, 2)
+            .map((group) => (
+              <Pill key={group} tone="accent">
+                {group}
+              </Pill>
+            ))}
         </div>
 
-        {/* Title */}
-        <h3 className="display-title mt-3 text-xl uppercase leading-none tracking-wide text-white">
+        {/* Workout name */}
+        <h3
+          className="
+            mt-4
+            font-oswald
+            text-[20px]
+            font-bold
+            uppercase
+            leading-none
+            tracking-wide
+            text-white
+          "
+        >
           {workout.name}
         </h3>
 
         {/* Equipment */}
-        <p className="mt-2 text-sm text-[#7F857D]">
+        <p className="mt-2 text-[13px] leading-5 text-[#8B919A]">
           {workout.equipment}
         </p>
 
         {/* Stats */}
-        <div className="mt-5 grid grid-cols-3 border-t border-white/10 pt-4">
-          <div className="flex items-center gap-1.5 text-[11px] text-[#7F857D]">
-            <Clock3 size={13} />
+        <div className="mt-4 grid grid-cols-3 border-t border-[#24272E] pt-4">
+
+          {/* Duration */}
+          <div className="flex items-center gap-2 text-[13px] text-[#9CA3AF]">
+            <Clock3 size={14} strokeWidth={1.8} />
             <span>{workout.duration} min</span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] text-[#7F857D]">
-            <Flame size={13} />
+          {/* Calories */}
+          <div className="flex items-center gap-2 text-[13px] text-[#9CA3AF]">
+            <Flame size={14} strokeWidth={1.8} />
             <span>{workout.caloriesBurned} kcal</span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] text-[#7F857D]">
-            <Star size={13} />
+          {/* Rating */}
+          <div className="flex items-center gap-2 text-[13px] text-[#9CA3AF]">
+            <Star size={14} strokeWidth={1.8} />
             <span>{workout.rating}</span>
           </div>
+
         </div>
       </div>
     </Link>

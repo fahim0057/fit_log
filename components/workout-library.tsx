@@ -1,10 +1,12 @@
 "use client";
 
+"use client";
+
 import { SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import WorkoutCard from "@/../components/workout-card";
-import { Spinner } from "@/../components/ui";
+import { SectionTitle, Spinner } from "@/../components/ui";
 import type { SortOption, Workout } from "@/../lib/types";
 
 const API_URL = "https://api.abcz.workers.dev/api/fitlog";
@@ -83,101 +85,92 @@ export default function WorkoutLibrary() {
     return sortWorkouts(workouts, sortBy);
   }, [workouts, sortBy]);
 
-  return (
-    <section
-      id="library"
-      className="site-shell scroll-mt-24 px-6 pb-20 pt-4 sm:pb-24 lg:pb-28"
-    >
-      {/* ================= HEADER ================= */}
-      <div className="mb-8 flex flex-col gap-6 border-b border-white/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#C2F800]">
-            12 MOVEMENTS
-          </p>
+return (
+  <section
+    id="library"
+    className="mx-auto w-full max-w-[1280px] scroll-mt-24 px-6 pb-20 pt-8 lg:pb-24"
+  >
+    {/* Header */}
+    <div className="mb-6 flex items-end justify-between">
+      <SectionTitle
+        title="THE LIBRARY"
+        subtitle="Twelve lifts covering every major muscle group."
+      />
 
-          <h2 className="display-title mt-2 text-4xl uppercase leading-none tracking-tight text-white sm:text-5xl">
-            THE LIBRARY
-          </h2>
+      {/* Sort */}
+      <label className="mb-1 flex h-8 items-center gap-2 rounded border border-white/10 bg-[#0B0D0B] px-3">
+        <SlidersHorizontal
+          size={13}
+          className="text-[#7F857D]"
+        />
 
-          <p className="mt-3 text-sm text-[#7F857D] sm:text-base">
-            Twelve lifts covering every major muscle group.
-          </p>
-        </div>
+        <span className="text-[10px] uppercase tracking-[0.12em] text-[#7F857D]">
+          Sort By
+        </span>
 
-        {/* ================= SORT ================= */}
-        <label className="flex h-10 items-center gap-2 border border-white/10 bg-[#0B0D0B] px-3">
-          <SlidersHorizontal
-            size={15}
-            className="text-[#7F857D]"
-          />
-
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#7F857D]">
-            Sort By
-          </span>
-
-          <select
-            value={sortBy}
-            onChange={(event) =>
-              setSortBy(event.target.value as SortOption)
-            }
-            className="cursor-pointer bg-transparent text-xs font-semibold text-white outline-none"
-            aria-label="Sort workouts"
+        <select
+          value={sortBy}
+          onChange={(event) =>
+            setSortBy(event.target.value as SortOption)
+          }
+          className="bg-transparent text-[10px] font-semibold text-white outline-none"
+          aria-label="Sort workouts"
+        >
+          <option
+            value="duration"
+            className="bg-[#0B0D0B]"
           >
-            <option
-              value="duration"
-              className="bg-[#0B0D0B]"
-            >
-              Duration
-            </option>
+            Duration
+          </option>
 
-            <option
-              value="calories"
-              className="bg-[#0B0D0B]"
-            >
-              Calories
-            </option>
+          <option
+            value="calories"
+            className="bg-[#0B0D0B]"
+          >
+            Calories
+          </option>
 
-            <option
-              value="rating"
-              className="bg-[#0B0D0B]"
-            >
-              Rating
-            </option>
-          </select>
-        </label>
+          <option
+            value="rating"
+            className="bg-[#0B0D0B]"
+          >
+            Rating
+          </option>
+        </select>
+      </label>
+    </div>
+
+    {/* Loading */}
+    {loading && (
+      <div className="grid min-h-[300px] place-items-center rounded-lg border border-white/10 bg-[#0B0D0B]">
+        <div className="flex flex-col items-center gap-3 text-[#7F857D]">
+          <Spinner />
+
+          <p className="text-xs uppercase tracking-[0.14em]">
+            Loading workouts…
+          </p>
+        </div>
       </div>
+    )}
 
-      {/* ================= LOADING ================= */}
-      {loading && (
-        <div className="grid min-h-[320px] place-items-center border border-white/10 bg-[#0B0D0B]">
-          <div className="flex flex-col items-center gap-3 text-[#7F857D]">
-            <Spinner />
+    {/* Error */}
+    {!loading && error && (
+      <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-6 text-sm text-red-300">
+        {error}
+      </div>
+    )}
 
-            <p className="text-xs font-semibold uppercase tracking-[0.16em]">
-              Loading workouts…
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* ================= ERROR ================= */}
-      {!loading && error && (
-        <div className="border border-red-500/20 bg-red-500/5 p-6 text-sm text-red-300">
-          {error}
-        </div>
-      )}
-
-      {/* ================= WORKOUT GRID ================= */}
-      {!loading && !error && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {sortedWorkouts.map((workout) => (
-            <WorkoutCard
-              key={workout.id}
-              workout={workout}
-            />
-          ))}
-        </div>
-      )}
-    </section>
-  );
+    {/* Cards */}
+    {!loading && !error && (
+      <div className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {sortedWorkouts.map((workout) => (
+          <WorkoutCard
+            key={workout.id}
+            workout={workout}
+          />
+        ))}
+      </div>
+    )}
+  </section>
+);
 }

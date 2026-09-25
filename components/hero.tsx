@@ -30,13 +30,13 @@ export default function Hero() {
           </p>
 
           <div className="mt-8">
-            <Link
-              href="/#library"
-              className="inline-flex items-center gap-2 rounded-full bg-[#C2F800] px-5 py-3 text-sm font-bold uppercase tracking-wide text-black transition hover:bg-[#d5ff38]"
-            >
-              Browse Workouts
-              <ArrowDownRight size={17} strokeWidth={2.5} />
-            </Link>
+           <a
+  href="#library"
+  className="inline-flex items-center gap-2 rounded-full bg-[#C2F800] px-5 py-3 text-sm font-bold uppercase tracking-wide text-black transition hover:bg-[#d5ff38]"
+>
+  BROWSE WORKOUTS
+  <ArrowDownRight size={17} strokeWidth={2.5} />
+</a>
           </div>
 
         </div>
