@@ -1,28 +1,42 @@
 import type { ReactNode } from "react";
 
 export function SectionTitle({
-  eyebrow,
   title,
   subtitle,
 }: {
-  eyebrow?: string;
   title: string;
   subtitle?: string;
 }) {
   return (
-    <div className="mb-7">
-      {eyebrow ? <p className="eyebrow mb-2">{eyebrow}</p> : null}
-      <h2 className="display-title text-4xl uppercase tracking-tight sm:text-5xl">
+    <div className="mb-5">
+      <h2 className="font-oswald text-3xl font-bold uppercase leading-none tracking-tight text-white sm:text-4xl">
         {title}
       </h2>
-      {subtitle ? <p className="mt-2 max-w-2xl text-sm text-zinc-500 sm:text-base">{subtitle}</p> : null}
+
+      {subtitle && (
+        <p className="mt-1.5 text-xs text-[#7F857D] sm:text-sm">
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }
 
-export function Pill({ children, tone = "default" }: { children: ReactNode; tone?: "default" | "accent" }) {
+export function Pill({
+  children,
+  tone = "default",
+}: {
+  children: ReactNode;
+  tone?: "default" | "accent";
+}) {
   return (
-    <span className={tone === "accent" ? "pill pill-accent" : "pill"}>
+    <span
+      className={
+        tone === "accent"
+          ? "rounded-full bg-[#C2F800] px-2 py-0.5 text-[8px] font-bold uppercase leading-none tracking-wide text-black"
+          : "rounded-full border border-white/10 px-2 py-0.5 text-[8px] uppercase leading-none text-[#7F857D]"
+      }
+    >
       {children}
     </span>
   );

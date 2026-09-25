@@ -101,7 +101,7 @@ export default function MyPlanContent() {
         ) : (
           <div className="space-y-3">
             {items.map((item) => (
-              <PlanCard key={item.id} workout={item} done ={"done" in item ? item.done : false} savedMode={activeTab === "saved"} />
+              <PlanCard key={item.id} workout={item} done={"done" in item && typeof item.done === "boolean" ? item.done : false} savedMode={activeTab === "saved"} />
             ))}
           </div>
         )}

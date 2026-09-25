@@ -1,34 +1,50 @@
 "use client";
 
-import { Search, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+
 import WorkoutCard from "@/../components/workout-card";
-import { SectionTitle, Spinner } from "@/../components/ui";
+import { Spinner } from "@/../components/ui";
 import type { SortOption, Workout } from "@/../lib/types";
 
-function sortWorkouts(items: Workout[], sortBy: SortOption) {
-  return [...items].sort((a, b) => {
-    if (sortBy === "duration") return a.duration - b.duration;
-    if (sortBy === "calories") return b.caloriesBurned - a.caloriesBurned;
-    return b.rating - a.rating;
+const API_URL = "https://api.abcz.workers.dev/api/fitlog";
+
+const sortWorkouts = (
+  workouts: Workout[],
+  sortBy: SortOption,
+): Workout[] => {
+  return [...workouts].sort((a, b) => {
+    switch (sortBy) {
+      case "duration":
+        return a.duration - b.duration;
+
+      case "calories":
+        return b.caloriesBurned - a.caloriesBurned;
+
+      case "rating":
+        return b.rating - a.rating;
+
+      default:
+        return 0;
+    }
   });
-}
+};
 
 export default function WorkoutLibrary() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>("duration");
-  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
 
-    async function loadWorkouts() {
+    const loadWorkouts = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch("https://api.abcz.workers.dev/api/fitlog", {
+
+        const response = await fetch(API_URL, {
           signal: controller.signal,
           cache: "no-store",
         });
@@ -37,86 +53,128 @@ export default function WorkoutLibrary() {
           throw new Error("Could not load workouts.");
         }
 
-        const data = (await response.json()) as Workout[];
+        const data: Workout[] = await response.json();
+
         setWorkouts(data);
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "AbortError") return;
-        setError(err instanceof Error ? err.message : "Something went wrong.");
+      } catch (error) {
+        if (
+          error instanceof DOMException &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Something went wrong.",
+        );
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     loadWorkouts();
+
     return () => controller.abort();
   }, []);
 
-  const visibleWorkouts = useMemo(() => {
-    const q = query.trim().toLowerCase();
-
-    const filtered = !q
-      ? workouts
-      : workouts.filter((workout) =>
-          workout.name.toLowerCase().includes(q) ||
-          workout.muscleGroups.some((group) => group.toLowerCase().includes(q)),
-        );
-
-    return sortWorkouts(filtered, sortBy);
-  }, [workouts, query, sortBy]);
+  const sortedWorkouts = useMemo(() => {
+    return sortWorkouts(workouts, sortBy);
+  }, [workouts, sortBy]);
 
   return (
-    <section id="library" className="site-shell scroll-mt-24 pb-20 lg:pb-28">
-      <SectionTitle
-        eyebrow="12 MOVEMENTS"
-        title="THE LIBRARY"
-        subtitle="Twelve lifts covering every major muscle group."
-      />
+    <section
+      id="library"
+      className="site-shell scroll-mt-24 px-6 pb-20 pt-4 sm:pb-24 lg:pb-28"
+    >
+      {/* ================= HEADER ================= */}
+      <div className="mb-8 flex flex-col gap-6 border-b border-white/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#C2F800]">
+            12 MOVEMENTS
+          </p>
 
-      <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <label className="flex min-h-11 flex-1 items-center gap-2 border border-white/10 bg-[#0b0d0b] px-3 lg:max-w-md">
-          <Search size={16} className="text-zinc-500" />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search workouts or muscle groups"
-            className="w-full bg-transparent text-sm text-white outline-none placeholder:text-zinc-700"
+          <h2 className="display-title mt-2 text-4xl uppercase leading-none tracking-tight text-white sm:text-5xl">
+            THE LIBRARY
+          </h2>
+
+          <p className="mt-3 text-sm text-[#7F857D] sm:text-base">
+            Twelve lifts covering every major muscle group.
+          </p>
+        </div>
+
+        {/* ================= SORT ================= */}
+        <label className="flex h-10 items-center gap-2 border border-white/10 bg-[#0B0D0B] px-3">
+          <SlidersHorizontal
+            size={15}
+            className="text-[#7F857D]"
           />
-        </label>
 
-        <label className="flex min-h-11 items-center gap-2 border border-white/10 bg-[#0b0d0b] px-3">
-          <SlidersHorizontal size={16} className="text-zinc-500" />
-          <span className="text-xs uppercase tracking-[0.12em] text-zinc-600">Sort By</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#7F857D]">
+            Sort By
+          </span>
+
           <select
             value={sortBy}
-            onChange={(event) => setSortBy(event.target.value as SortOption)}
-            className="bg-transparent text-sm text-white outline-none"
+            onChange={(event) =>
+              setSortBy(event.target.value as SortOption)
+            }
+            className="cursor-pointer bg-transparent text-xs font-semibold text-white outline-none"
+            aria-label="Sort workouts"
           >
-            <option className="bg-black" value="duration">Duration</option>
-            <option className="bg-black" value="calories">Calories</option>
-            <option className="bg-black" value="rating">Rating</option>
+            <option
+              value="duration"
+              className="bg-[#0B0D0B]"
+            >
+              Duration
+            </option>
+
+            <option
+              value="calories"
+              className="bg-[#0B0D0B]"
+            >
+              Calories
+            </option>
+
+            <option
+              value="rating"
+              className="bg-[#0B0D0B]"
+            >
+              Rating
+            </option>
           </select>
         </label>
       </div>
 
-      {loading ? (
-        <div className="grid min-h-80 place-items-center border border-white/10 bg-[#0b0d0b]">
-          <div className="flex flex-col items-center gap-3 text-zinc-500">
+      {/* ================= LOADING ================= */}
+      {loading && (
+        <div className="grid min-h-[320px] place-items-center border border-white/10 bg-[#0B0D0B]">
+          <div className="flex flex-col items-center gap-3 text-[#7F857D]">
             <Spinner />
-            <p className="text-sm uppercase tracking-[0.14em]">Loading workouts…</p>
+
+            <p className="text-xs font-semibold uppercase tracking-[0.16em]">
+              Loading workouts…
+            </p>
           </div>
         </div>
-      ) : error ? (
+      )}
+
+      {/* ================= ERROR ================= */}
+      {!loading && error && (
         <div className="border border-red-500/20 bg-red-500/5 p-6 text-sm text-red-300">
-          {error} Refresh the page and try again.
+          {error}
         </div>
-      ) : visibleWorkouts.length === 0 ? (
-        <div className="border border-white/10 bg-[#0b0d0b] p-10 text-center text-zinc-500">
-          No workouts matched your search.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {visibleWorkouts.map((workout) => (
-            <WorkoutCard key={workout.id} workout={workout} />
+      )}
+
+      {/* ================= WORKOUT GRID ================= */}
+      {!loading && !error && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {sortedWorkouts.map((workout) => (
+            <WorkoutCard
+              key={workout.id}
+              workout={workout}
+            />
           ))}
         </div>
       )}

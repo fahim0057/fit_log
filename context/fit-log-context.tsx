@@ -36,23 +36,27 @@ export function FitLogProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    try {
-      const savedPlan = localStorage.getItem(PLAN_KEY);
-      const savedSaved = localStorage.getItem(SAVED_KEY);
+    const hydrationId = window.setTimeout(() => {
+      try {
+        const savedPlan = localStorage.getItem(PLAN_KEY);
+        const savedSaved = localStorage.getItem(SAVED_KEY);
 
-      if (savedPlan) {
-        const parsedPlan = JSON.parse(savedPlan) as PlanWorkout[];
-        setPlan(parsedPlan.slice(0, 5));
-      }
+        if (savedPlan) {
+          const parsedPlan = JSON.parse(savedPlan) as PlanWorkout[];
+          setPlan(parsedPlan.slice(0, 5));
+        }
 
-      if (savedSaved) {
-        setSaved(JSON.parse(savedSaved) as Workout[]);
+        if (savedSaved) {
+          setSaved(JSON.parse(savedSaved) as Workout[]);
+        }
+      } catch (error) {
+        console.error("Could not load FitLog data", error);
+      } finally {
+        setHydrated(true);
       }
-    } catch (error) {
-      console.error("Could not load FitLog data", error);
-    } finally {
-      setHydrated(true);
-    }
+    }, 0);
+
+    return () => window.clearTimeout(hydrationId);
   }, []);
 
   useEffect(() => {

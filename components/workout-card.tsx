@@ -1,37 +1,75 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Clock3, Flame, Star } from "lucide-react";
+import {
+  Clock3,
+  Flame,
+  Star,
+} from "lucide-react";
+
 import type { Workout } from "@/../lib/types";
 import { Pill } from "@/../components/ui";
 
-export default function WorkoutCard({ workout }: { workout: Workout }) {
+export default function WorkoutCard({
+  workout,
+}: {
+  workout: Workout;
+}) {
   return (
     <Link
       href={`/workout/${workout.id}`}
-      className="group block border border-white/10 bg-[#0b0d0b] transition duration-200 hover:-translate-y-1 hover:border-lime-300/50"
+      className="group block overflow-hidden border border-white/10 bg-[#0B0D0B] transition duration-200 hover:border-[#C2F800]/40"
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-black">
-        <img
+      {/* ================= IMAGE ================= */}
+      <div className="relative aspect-[16/8] overflow-hidden bg-[#080908]">
+        <Image
           src={workout.image}
           alt={workout.name}
-          className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-          loading="lazy"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition duration-300 group-hover:scale-[1.03]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-        <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-          {workout.muscleGroups.slice(0, 2).map((group) => (
-            <Pill key={group} tone="accent">{group}</Pill>
-          ))}
-        </div>
       </div>
 
-      <div className="p-4">
-        <h3 className="display-title text-xl tracking-wide">{workout.name}</h3>
-        <p className="mt-1 text-sm text-zinc-500">{workout.equipment}</p>
+      {/* ================= CONTENT ================= */}
+      <div className="p-4 sm:p-5">
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2">
+          {workout.muscleGroups.slice(0, 2).map((group) => (
+            <Pill
+              key={group}
+              tone="accent"
+            >
+              {group}
+            </Pill>
+          ))}
+        </div>
 
-        <div className="mt-5 grid grid-cols-3 gap-2 border-t border-white/10 pt-4 text-xs text-zinc-500">
-          <span className="flex items-center gap-1.5"><Clock3 size={14} /> {workout.duration} min</span>
-          <span className="flex items-center gap-1.5"><Flame size={14} /> {workout.caloriesBurned} kcal</span>
-          <span className="flex items-center gap-1.5"><Star size={14} /> {workout.rating}</span>
+        {/* Title */}
+        <h3 className="display-title mt-3 text-xl uppercase leading-none tracking-wide text-white">
+          {workout.name}
+        </h3>
+
+        {/* Equipment */}
+        <p className="mt-2 text-sm text-[#7F857D]">
+          {workout.equipment}
+        </p>
+
+        {/* Stats */}
+        <div className="mt-5 grid grid-cols-3 border-t border-white/10 pt-4">
+          <div className="flex items-center gap-1.5 text-[11px] text-[#7F857D]">
+            <Clock3 size={13} />
+            <span>{workout.duration} min</span>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-[11px] text-[#7F857D]">
+            <Flame size={13} />
+            <span>{workout.caloriesBurned} kcal</span>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-[11px] text-[#7F857D]">
+            <Star size={13} />
+            <span>{workout.rating}</span>
+          </div>
         </div>
       </div>
     </Link>
